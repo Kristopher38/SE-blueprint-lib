@@ -3,6 +3,7 @@
 
 #include <string>
 #include <stdexcept>
+#include <vector>
 #include <rapidxml/rapidxml.hpp>
 #include "cubeblock.h"
 #include "terminalblock.h"
@@ -12,25 +13,18 @@ using namespace rapidxml;
 
 class CubeGrid
 {
+    friend class Blueprint;
     private:
-        uint64_t* entity_counter_ptr;
-        bool local_entity_counter;
-        rapidxml::xml_node<>* cubegrid_node;
-        bool size_inheritance;
-        BLOCK_SIZE grid_size;
-
-        rapidxml::xml_node<>* FindBlock(int x, int y, int z);
+        void AppendXml(rapidxml::xml_node<>* cubegrids_node, uint64_t* entity_counter);
 
     public:
-        CubeGrid();
-        CubeGrid(uint64_t* entity_counter, rapidxml::xml_node<>* cubegrid_node, bool size_inheritance, BLOCK_SIZE grid_size);
+        CubeGridParams Parameters;
+        std::vector<ICubeBlock*> blocks;
+
+        CubeGrid(CubeGridParams parameters = CubeGridParams());
         ~CubeGrid();
 
-        void AddBlock(ICubeBlock* cubeblock);
-
-        void RemoveBlock(int x, int y, int z);
-
-        void Remove();
+        std::size_t FindBlock(int x, int y, int z);
 };
 
 #endif // H_CUBEGRID

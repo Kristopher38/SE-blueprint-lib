@@ -8,8 +8,8 @@ ICubeBlock::~ICubeBlock() {}
 void ICubeBlock::AppendAttributes(rapidxml::xml_node<>* block)
 {
     rapidxml::xml_document<>* doc = block->document();
-    block->append_node(doc->allocate_node(node_element, "SubtypeName", doc->allocate_string(SubtypeName().c_str())));
 
+    block->append_node(doc->allocate_node(node_element, "SubtypeName", doc->allocate_string(SubtypeName().c_str())));
     block->append_node(doc->allocate_node(node_element, "Min"));
     block = block->last_node();
     block->append_attribute(doc->allocate_attribute("x", doc->allocate_string(std::to_string(Coords.x).c_str())));

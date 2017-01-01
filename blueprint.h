@@ -3,28 +3,33 @@
 
 #include <iostream>
 #include <string>
+#include <stdexcept>
 #include <rapidxml/rapidxml.hpp>
 #include <rapidxml/rapidxml_print.hpp>
 #include <rapidxml/rapidxml_utils.hpp>
-#include "cubegrids.h"
+#include "cubegrid.h"
 
 using namespace rapidxml;
+
+class CubeGrid;
 
 class Blueprint
 {
     private:
-        rapidxml::xml_document<> doc;
-        rapidxml::xml_node<>* shipblueprint_node;
         std::string blueprint_name;
-        std::string player_name;
-        uint64_t owner_steam_id;
+        std::string author_name;
+        uint64_t author_steam_id;
+
+        uint64_t entity_counter;
+        rapidxml::xml_document<>* doc;
 
     public:
-        CubeGrids Cubegrids;
+        std::vector<CubeGrid> Cubegrids;
 
-        Blueprint(std::string blueprint_name = "", std::string player_name = "", uint64_t owner_steam_id = 0);
+        Blueprint(std::string blueprint_name = "", std::string author_name = "", uint64_t author_steam_id = 0);
         ~Blueprint();
 
+        void BuildXml();
         void Print(std::ostream& out, bool no_indenting);
 };
 

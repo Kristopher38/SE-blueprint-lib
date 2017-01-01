@@ -2,65 +2,82 @@
 
 using namespace rapidxml;
 
-CubeGrid::CubeGrid() {}
-
-CubeGrid::CubeGrid(uint64_t* entity_counter, rapidxml::xml_node<>* cubegrid_node, bool size_inheritance, BLOCK_SIZE grid_size)
-{
-    this->entity_counter_ptr = entity_counter;
-    this->cubegrid_node = cubegrid_node;
-    this->size_inheritance = size_inheritance;
-    this->grid_size = grid_size;
-}
+CubeGrid::CubeGrid(CubeGridParams parameters) : Parameters(parameters) {}
 
 CubeGrid::~CubeGrid() {}
 
-rapidxml::xml_node<>* CubeGrid::FindBlock(int x, int y, int z)
+std::size_t CubeGrid::FindBlock(int x, int y, int z)
 {
-    for (rapidxml::xml_node<>* block = cubegrid_node->first_node("CubeBlocks")->first_node(); block; block = block->next_sibling())
+    for (std::size_t i = 0; i < blocks.size(); ++i)
     {
-        rapidxml::xml_node<>* block_coords = block->first_node("Min");
-        if (std::string(block_coords->first_attribute("x")->value()) != std::to_string(x))
+        if (blocks[i]->Coords.x != x)
             continue;
-        if (std::string(block_coords->first_attribute("y")->value()) != std::to_string(y))
+        if (blocks[i]->Coords.y != y)
             continue;
-        if (std::string(block_coords->first_attribute("z")->value()) != std::to_string(z))
+        if (blocks[i]->Coords.z != z)
             continue;
 
-        return block;
+        return i;
     }
-    return 0;
+    return -1;
 }
 
-void CubeGrid::AddBlock(ICubeBlock* cubeblock)
+void CubeGrid::AppendXml(rapidxml::xml_node<>* cubegrids_node, uint64_t* entity_counter)
 {
-    rapidxml::xml_node<>* block = FindBlock(cubeblock->Coords.x, cubeblock->Coords.y, cubeblock->Coords.z);
-    if (!block)
+    rapidxml::xml_document<>* doc = cubegrids_node->document();
+    rapidxml::xml_node<>* cubegrid = doc->allocate_node(node_element, "CubeGrid");
+    cubegrids_node->append_node(cubegrid);
+
+    cubegrid->append_node(doc->allocate_node(node_element, "SubtypeName"));
+    cubegrid->append_node(doc->allocate_node(node_element, "EntityId", doc->allocate_string(std::to_string((*entity_counter)++).c_str())));
+    cubegrid->append_node(doc->allocate_node(node_element, "PersistentFlags", "CastShadows InScene"));
+    cubegrid->append_node(doc->allocate_node(node_element, "PositionAndOrientation"));
+
+    rapidxml::xml_node<>* position = cubegrid->last_node();
+    position->append_node(doc->allocate_node(node_element, "Position"));
+    position = position->last_node();
+    position->append_attribute(doc->allocate_attribute("x", doc->allocate_string(std::to_string(Parameters.Position.x).c_str())));
+    position->append_attribute(doc->allocate_attribute("y", doc->allocate_string(std::to_string(Parameters.Position.y).c_str())));
+    position->append_attribute(doc->allocate_attribute("z", doc->allocate_string(std::to_string(Parameters.Position.z).c_str())));
+    position = position->parent();
+    position->append_node(doc->allocate_node(node_element, "Forward"));
+    position = position->last_node();
+    position->append_attribute(doc->allocate_attribute("x", doc->allocate_string(std::to_string(Parameters.Forward.x).c_str())));
+    position->append_attribute(doc->allocate_attribute("y", doc->allocate_string(std::to_string(Parameters.Forward.y).c_str())));
+    position->append_attribute(doc->allocate_attribute("z", doc->allocate_string(std::to_string(Parameters.Forward.z).c_str())));
+    position = position->parent();
+    position->append_node(doc->allocate_node(node_element, "Up"));
+    position = position->last_node();
+    position->append_attribute(doc->allocate_attribute("x", doc->allocate_string(std::to_string(Parameters.Up.x).c_str())));
+    position->append_attribute(doc->allocate_attribute("y", doc->allocate_string(std::to_string(Parameters.Up.y).c_str())));
+    position->append_attribute(doc->allocate_attribute("z", doc->allocate_string(std::to_string(Parameters.Up.z).c_str())));
+    position = position->parent();
+    position->append_node(doc->allocate_node(node_element, "Orientation"));
+    position = position->last_node();
+    position->append_node(doc->allocate_node(node_element, "X", doc->allocate_string(std::to_string(Parameters.Orientation.x).c_str())));
+    position->append_node(doc->allocate_node(node_element, "Y", doc->allocate_string(std::to_string(Parameters.Orientation.y).c_str())));
+    position->append_node(doc->allocate_node(node_element, "Z", doc->allocate_string(std::to_string(Parameters.Orientation.z).c_str())));
+    position->append_node(doc->allocate_node(node_element, "W", doc->allocate_string(std::to_string(Parameters.Orientation.w).c_str())));
+
+    cubegrid->append_node(doc->allocate_node(node_element, "GridSizeEnum", Parameters.GridSize ? "Large" : "Small"));
+    cubegrid->append_node(doc->allocate_node(node_element, "CubeBlocks"));
+    for (std::size_t i = 0; i < blocks.size(); ++i)
     {
-        rapidxml::xml_node<>* block = cubegrid_node->first_node("CubeBlocks");
-        rapidxml::xml_document<>* doc = block->document();
-        block->append_node(doc->allocate_node(node_element, "MyObjectBuilder_CubeBlock"));
-        block = block->last_node();
-        block->append_attribute(doc->allocate_attribute("xsi:type", doc->allocate_string(cubeblock->ObjectBuilder().insert(0, "MyObjectBuilder_").c_str())));
-
-        ITerminalBlock* myTerminalBlock = dynamic_cast<ITerminalBlock*>(cubeblock);
+        ITerminalBlock* myTerminalBlock = dynamic_cast<ITerminalBlock*>(blocks[i]);
         if (myTerminalBlock)
-            myTerminalBlock->EntityId = (*entity_counter_ptr)++;
+            myTerminalBlock->EntityId = (*entity_counter)++;
+        if (Parameters.BlocksInheritGridSize)
+            blocks[i]->Size = Parameters.GridSize;
 
-        if (size_inheritance)
-            cubeblock->Size = grid_size;
-        cubeblock->AppendAttributes(block);
-    } else throw std::invalid_argument(std::string("Cannot add block at coordinates [x: ") + std::to_string(cubeblock->Coords.x) + std::string(", y: ") + std::to_string(cubeblock->Coords.y) + std::string(", z: ") + std::to_string(cubeblock->Coords.z) + std::string("], block at those coordinates already exists"));
-}
-
-void CubeGrid::RemoveBlock(int x, int y, int z)
-{
-    rapidxml::xml_node<>* block = FindBlock(x, y, z);
-    if (block)
-        cubegrid_node->first_node("CubeBlocks")->remove_node(block);
-    else throw std::invalid_argument(std::string("Cannot remove block at coordinates [x: ") + std::to_string(x) + std::string(", y: ") + std::to_string(y) + std::string(", z: ") + std::to_string(z) + std::string("], block at those coordinates doesn't exist"));
-}
-
-void CubeGrid::Remove()
-{
-    cubegrid_node->parent()->remove_node(cubegrid_node);
+        rapidxml::xml_node<>* cubeblocks_node = cubegrid->last_node();
+        cubeblocks_node->append_node(doc->allocate_node(node_element, "MyObjectBuilder_CubeBlock"));
+        cubeblocks_node = cubeblocks_node->last_node();
+        cubeblocks_node->append_attribute(doc->allocate_attribute("xsi:type", doc->allocate_string(blocks[i]->ObjectBuilder().insert(0, "MyObjectBuilder_").c_str())));
+        blocks[i]->AppendAttributes(cubeblocks_node);
+    }
+    cubegrid->append_node(doc->allocate_node(node_element, "IsStatic", Parameters.IsStatic ? "true" : "false"));
+    cubegrid->append_node(doc->allocate_node(node_element, "DisplayName", doc->allocate_string(Parameters.DisplayName.c_str())));
+    cubegrid->append_node(doc->allocate_node(node_element, "DestructibleBlocks", Parameters.DestructibleBlocks ? "true" : "false"));
+    cubegrid->append_node(doc->allocate_node(node_element, "IsRespawnGrid", Parameters.IsRespawnGrid ? "true" : "false"));
+    cubegrid->append_node(doc->allocate_node(node_element, "LocalCoordSys", doc->allocate_string(std::to_string(Parameters.LocalCoordSys).c_str())));
 }

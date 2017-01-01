@@ -19,26 +19,30 @@ int main()
         params.BlocksInheritGridSize = false;
         params.GridSize = SIZE_SMALL;
         //CubeGrid cb(params);
-        unsigned cbg1 = Bp.Cubegrids.Add(params);
+        Bp.Cubegrids.push_back(CubeGrid());
         params.Forward.x = 4;
         params.IsRespawnGrid = true;
-        unsigned cbg2 = Bp.Cubegrids.Add(params);
+        Bp.Cubegrids.push_back(CubeGrid());
 
         TimerBlock timer;
         timer.Coords.x = 5;
         timer.Coords.y = 4;
         timer.Coords.z = 2;
-        Bp.Cubegrids[cbg1].AddBlock(&timer);
+        Bp.Cubegrids[0].blocks.push_back(new TimerBlock(timer));
         timer.Coords.x = 4;
         timer.Coords.y = 4;
         timer.Coords.z = 2;
-        Bp.Cubegrids[cbg1].AddBlock(&timer);
+        Bp.Cubegrids[1].blocks.push_back(new TimerBlock(timer));
         std::cout<<"Saving output to file"<<std::endl;
         //Bp.Print(cout, false);
 
         fstream output("bp.sbc", std::fstream::out);
         if (output.is_open())
+        {
+            //Bp.BuildXml();
             Bp.Print(output, false);
+        }
+
         else cout<<"Error writing to file"<<endl;
     }
     catch (rapidxml::parse_error &e)

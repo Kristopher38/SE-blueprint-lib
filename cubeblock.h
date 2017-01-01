@@ -15,7 +15,7 @@ class ICubeBlock // basic class for all cubes
         static const char* OrientationStrLookup[6];
 
     protected:
-        virtual void AppendAttributes(rapidxml::xml_node<>* block);
+        virtual void AppendAttributes(rapidxml::xml_node<>* cubeblocks_node);
 
     public:
         struct
