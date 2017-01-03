@@ -4,6 +4,7 @@
 #include <string>
 #include <stdexcept>
 #include <vector>
+#include <memory>
 #include <rapidxml/rapidxml.hpp>
 #include "cubeblock.h"
 #include "terminalblock.h"
@@ -19,7 +20,15 @@ class CubeGrid
 
     public:
         CubeGridParams Parameters;
-        std::vector<ICubeBlock*> blocks;
+        class CubeBlocks : public std::vector<std::shared_ptr<ICubeBlock>>
+        {
+            public:
+                template <typename T> void Add (ICubeBlock* cubeblock)
+                {
+                    T* cb = dynamic_cast<T*>(cubeblock);
+                    std::vector<std::shared_ptr<ICubeBlock>>::push_back(std::make_shared<T>(*cb));
+                }
+        } blocks;
 
         CubeGrid(CubeGridParams parameters = CubeGridParams());
         ~CubeGrid();

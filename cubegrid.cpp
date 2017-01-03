@@ -63,7 +63,7 @@ void CubeGrid::AppendXml(rapidxml::xml_node<>* cubegrids_node, uint64_t* entity_
     cubegrid->append_node(doc->allocate_node(node_element, "CubeBlocks"));
     for (std::size_t i = 0; i < blocks.size(); ++i)
     {
-        ITerminalBlock* myTerminalBlock = dynamic_cast<ITerminalBlock*>(blocks[i]);
+        ITerminalBlock* myTerminalBlock = dynamic_cast<ITerminalBlock*>(blocks[i].get());
         if (myTerminalBlock)
             myTerminalBlock->EntityId = (*entity_counter)++;
         if (Parameters.BlocksInheritGridSize)
