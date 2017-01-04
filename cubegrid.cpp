@@ -2,10 +2,6 @@
 
 using namespace rapidxml;
 
-CubeGrid::CubeGrid(CubeGridParams parameters) : Parameters(parameters) {}
-
-CubeGrid::~CubeGrid() {}
-
 std::size_t CubeGrid::FindBlock(int x, int y, int z)
 {
     for (std::size_t i = 0; i < blocks.size(); ++i)

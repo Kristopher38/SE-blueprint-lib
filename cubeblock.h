@@ -2,6 +2,7 @@
 #define H_CUBEBLOCK
 
 #include <string>
+#include <memory>
 #include <rapidxml/rapidxml.hpp>
 #include "typedefs.h"
 
@@ -43,6 +44,7 @@ class ICubeBlock // basic class for all cubes
 
         virtual std::string ObjectBuilder() = 0;
         virtual std::string SubtypeName() = 0;
+        virtual std::shared_ptr<ICubeBlock> clone() const = 0;
 };
 
 

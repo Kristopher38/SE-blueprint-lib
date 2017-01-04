@@ -65,6 +65,11 @@ class TimerBlock : public IFunctionalBlock
 
         virtual std::string ObjectBuilder() override {return "TimerBlock";}
         virtual std::string SubtypeName() override {return (this->Size ? "TimerBlockLarge" : "TimerBlockSmall");}
+
+        virtual std::shared_ptr<ICubeBlock> clone() const
+        {
+            return std::make_shared<TimerBlock>(*this);
+        }
 };
 
 class ArmorBlockCornerInv : public ICubeBlock
