@@ -20,7 +20,8 @@ int main()
         timer.Coords.x = 5;
         timer.Coords.y = 3;
         timer.Coords.z = 7;
-        Bp.Cubegrids[0].blocks.Add(&timer);
+        timer.ColorMaskHSV.Hue = 1.0f;
+        Bp.Cubegrids[0].blocks.Add(timer);
         timer.Coords.x = 6;
         timer.Coords.y = 2;
         timer.Coords.z = 9;
@@ -28,8 +29,13 @@ int main()
         timer.Coords.x = 5;
         timer.Coords.y = 1;
         timer.Coords.z = 3;
+        timer.Delay = 1234;
         Bp.Cubegrids[0].blocks.Add(timer);
-        Bp.Cubegrids[0].blocks.GetBlock<TimerBlock>(timer).Coords.x = 1;
+        timer = TimerBlock();
+        timer.Coords.x = 5;
+        timer.Coords.y = 1;
+        timer.Coords.z = 3;
+        Bp.Cubegrids[0].blocks.GetBlock(timer).Delay = 4321;
 
 
 

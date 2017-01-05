@@ -21,23 +21,23 @@ class ICubeBlock // basic class for all cubes
     public:
         struct
         {
-            int x = 0;
-            int y = 0;
-            int z = 0;
+            Accessor<int> x = 0;
+            Accessor<int> y = 0;
+            Accessor<int> z = 0;
         } Coords;
         struct
         {
-            float Hue = 0.0f;
-            float Saturation = -1.0f;
-            float Value = 0.0f;
+            Accessor<float> Hue = 0.0f;
+            Accessor<float> Saturation = -1.0f;
+            Accessor<float> Value = 0.0f;
         } ColorMaskHSV;
         struct
         {
-            ORIENTATION Forward = ORIENT_FORWARD;
-            ORIENTATION Up = ORIENT_UP;
+            Accessor<ORIENTATION> Forward = ORIENT_FORWARD;
+            Accessor<ORIENTATION> Up = ORIENT_UP;
         } BlockOrientation;
-        uint64_t BuiltBy = 0;
-        BLOCK_SIZE Size = SIZE_LARGE;
+        Accessor<uint64_t> BuiltBy = 0;
+        Accessor<BLOCK_SIZE> Size = SIZE_LARGE;
 
         ICubeBlock();
         virtual ~ICubeBlock();
@@ -45,6 +45,24 @@ class ICubeBlock // basic class for all cubes
         virtual std::string ObjectBuilder() = 0;
         virtual std::string SubtypeName() = 0;
         virtual std::shared_ptr<ICubeBlock> clone() const = 0;
+
+        virtual bool operator==(ICubeBlock& rhs)
+        {
+            return (this->Coords.x == rhs.Coords.x &&
+                    this->Coords.y == rhs.Coords.y &&
+                    this->Coords.z == rhs.Coords.z &&
+                    this->ColorMaskHSV.Hue == rhs.ColorMaskHSV.Hue &&
+                    this->ColorMaskHSV.Saturation == rhs.ColorMaskHSV.Saturation &&
+                    this->ColorMaskHSV.Value == rhs.ColorMaskHSV.Value &&
+                    this->BlockOrientation.Forward == rhs.BlockOrientation.Forward &&
+                    this->BlockOrientation.Up == rhs.BlockOrientation.Up &&
+                    this->BuiltBy == rhs.BuiltBy &&
+                    this->Size == rhs.Size);
+        }
+        virtual bool operator!=(ICubeBlock& rhs)
+        {
+            return !(*this==rhs);
+        }
 };
 
 

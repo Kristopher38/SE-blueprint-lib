@@ -6,11 +6,11 @@ std::size_t CubeGrid::FindBlock(int x, int y, int z)
 {
     for (std::size_t i = 0; i < blocks.size(); ++i)
     {
-        if (blocks[i]->Coords.x != x)
+        if (blocks[i]->Coords.x() != x)
             continue;
-        if (blocks[i]->Coords.y != y)
+        if (blocks[i]->Coords.y() != y)
             continue;
-        if (blocks[i]->Coords.z != z)
+        if (blocks[i]->Coords.z() != z)
             continue;
 
         return i;
@@ -61,7 +61,7 @@ void CubeGrid::AppendXml(rapidxml::xml_node<>* cubegrids_node, uint64_t* entity_
     {
         ITerminalBlock* myTerminalBlock = dynamic_cast<ITerminalBlock*>(blocks[i].get());
         if (myTerminalBlock)
-            myTerminalBlock->EntityId = (*entity_counter)++;
+            myTerminalBlock->EntityId() = (*entity_counter)++;
         if (Parameters.BlocksInheritGridSize)
             blocks[i]->Size = Parameters.GridSize;
 

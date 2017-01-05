@@ -38,13 +38,8 @@ class CubeGrid
                 {
                     for (std::size_t i = 0; i < std::vector<std::shared_ptr<ICubeBlock>>::size(); ++i)
                     {
-                        if (cubeblock.Coords.x != std::vector<std::shared_ptr<ICubeBlock>>::at(i).get()->Coords.x)
-                            continue;
-                        if (cubeblock.Coords.y != std::vector<std::shared_ptr<ICubeBlock>>::at(i).get()->Coords.y)
-                            continue;
-                        if (cubeblock.Coords.z != std::vector<std::shared_ptr<ICubeBlock>>::at(i).get()->Coords.z)
-                            continue;
-                        return dynamic_cast<T&>(*std::vector<std::shared_ptr<ICubeBlock>>::at(i).get());
+                        if (cubeblock == *dynamic_cast<T*>(std::vector<std::shared_ptr<ICubeBlock>>::at(i).get()))
+                            return dynamic_cast<T&>(*std::vector<std::shared_ptr<ICubeBlock>>::at(i).get());
                     }
                     return cubeblock;
                 }
@@ -66,7 +61,7 @@ class CubeGrid
         CubeGrid(CubeGridParams parameters = CubeGridParams()) : Parameters(parameters) {}
         ~CubeGrid() {}
 
-        CubeGrid(const CubeGrid& cubegrid) : Parameters(cubegrid.Parameters), blocks(CloneBlocks(cubegrid.blocks)) {std::cout<<"Calling copy ctor"<<std::endl;}
+        CubeGrid(const CubeGrid& cubegrid) : Parameters(cubegrid.Parameters), blocks(CloneBlocks(cubegrid.blocks)) {}
 
         std::size_t FindBlock(int x, int y, int z);
 };

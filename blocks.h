@@ -14,7 +14,7 @@ class ArmorBlock : public ICubeBlock
         virtual ~ArmorBlock() {}
 
         std::string ObjectBuilder() override {return "CubeBlock";}
-        std::string SubtypeName() override {return (this->Size ? "LargeBlockArmorBlock" : "SmallBlockArmorBlock");}
+        std::string SubtypeName() override {return (this->Size() ? "LargeBlockArmorBlock" : "SmallBlockArmorBlock");}
 };
 
 class Door : public IFunctionalBlock
@@ -47,28 +47,42 @@ class TimerBlock : public IFunctionalBlock
             IFunctionalBlock::AppendAttributes(block);
             Toolbar.AppendAttributes(block);
             rapidxml::xml_document<>* doc = block->document();
-            block->append_node(doc->allocate_node(node_element, "Delay", doc->allocate_string(std::to_string(Delay).c_str())));
-            block->append_node(doc->allocate_node(node_element, "CurrentTime", doc->allocate_string(std::to_string(CurrentTime).c_str())));
-            block->append_node(block->document()->allocate_node(node_element, "IsCountingDown", IsCountingDown ? "true" : "false"));
-            block->append_node(block->document()->allocate_node(node_element, "Silent", Silent ? "true" : "false"));
+            block->append_node(doc->allocate_node(node_element, "Delay", doc->allocate_string(std::to_string(Delay()).c_str())));
+            block->append_node(doc->allocate_node(node_element, "CurrentTime", doc->allocate_string(std::to_string(CurrentTime()).c_str())));
+            block->append_node(block->document()->allocate_node(node_element, "IsCountingDown", IsCountingDown() ? "true" : "false"));
+            block->append_node(block->document()->allocate_node(node_element, "Silent", Silent() ? "true" : "false"));
         }
 
     public:
-        unsigned Delay = 10000;
-        unsigned CurrentTime = 0;
-        bool IsCountingDown = false;
-        bool Silent = false;
+        Accessor<unsigned> Delay = 10000;
+        Accessor<unsigned> CurrentTime = 0;
+        Accessor<bool> IsCountingDown = false;
+        Accessor<bool> Silent = false;
         BlockToolbar Toolbar;
 
         TimerBlock() {}
         virtual ~TimerBlock() {}
 
         virtual std::string ObjectBuilder() override {return "TimerBlock";}
-        virtual std::string SubtypeName() override {return (this->Size ? "TimerBlockLarge" : "TimerBlockSmall");}
+        virtual std::string SubtypeName() override {return (this->Size() ? "TimerBlockLarge" : "TimerBlockSmall");}
 
         virtual std::shared_ptr<ICubeBlock> clone() const
         {
             return std::make_shared<TimerBlock>(*this);
+        }
+
+        bool operator==(TimerBlock& rhs)
+        {
+            bool ret = IFunctionalBlock::operator==(*dynamic_cast<IFunctionalBlock*>(&rhs));
+            return (this->Delay == rhs.Delay &&
+                    this->CurrentTime == rhs.CurrentTime &&
+                    this->IsCountingDown == rhs.IsCountingDown &&
+                    this->Silent == rhs.Silent &&
+                    ret);
+        }
+        bool operator!=(TimerBlock& rhs)
+        {
+            return !(*this==rhs);
         }
 };
 
@@ -79,7 +93,7 @@ class ArmorBlockCornerInv : public ICubeBlock
         virtual ~ArmorBlockCornerInv() {}
 
         std::string ObjectBuilder() override {return "CubeBlock";}
-        std::string SubtypeName() override {return (this->Size ? "LargeHeavyBlockArmorCornerInv" : "SmallHeavyBlockArmorCornerInv");}
+        std::string SubtypeName() override {return (this->Size() ? "LargeHeavyBlockArmorCornerInv" : "SmallHeavyBlockArmorCornerInv");}
 };
 
 #endif // H_BLOCKS
