@@ -45,7 +45,6 @@ template <typename T> class Accessor
         {
             this->value = arg;
             this->isdefault = false;
-            std::cout<<"Assigning value by = operator"<<std::endl;
             return this->value;
         }
         T& operator()()
@@ -57,7 +56,6 @@ template <typename T> class Accessor
         {
             this->isdefault = false;
             this->value = arg;
-            std::cout<<"Assigning value by (T arg)"<<std::endl;
             return this->value;
         }
         T* getptr()
@@ -71,8 +69,8 @@ template <typename T> class Accessor
         inline bool operator==(const Accessor& rhs) const { return this->value == rhs.value || isdefault; }
         inline bool operator!=(const Accessor& rhs) const { return !(this->value == rhs.value); }
 
-        Accessor() : isdefault(true) {std::cout<<"Calling default constructor Accessor"<<std::endl;}
-        Accessor(T val) : value(val), defaultValue(val), isdefault(true) {std::cout<<"Calling (T val) constructor accessor"<<std::endl;}
+        Accessor() : isdefault(true) {}
+        Accessor(T val) : value(val), defaultValue(val), isdefault(true) {}
 
         bool isDefault()
         {
