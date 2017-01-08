@@ -11,7 +11,7 @@ void ITerminalBlock::AppendAttributes(rapidxml::xml_node<>* block)
     ICubeBlock::AppendAttributes(block);
 
     rapidxml::xml_document<>* doc = block->document();
-    block->append_node(doc->allocate_node(node_element, "CustomName", doc->allocate_string(CustomName.c_str())));
+    block->append_node(doc->allocate_node(node_element, "CustomName", doc->allocate_string(CustomName().c_str())));
     block->append_node(doc->allocate_node(node_element, "ShowOnHUD", ShowOnHUD() ? "true" : "false"));
     block->append_node(doc->allocate_node(node_element, "ShowInTerminal", ShowInTerminal() ? "true" : "false"));
     block->append_node(doc->allocate_node(node_element, "ShowInInventory", ShowInInventory() ? "true" : "false"));

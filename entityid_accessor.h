@@ -13,7 +13,8 @@ class entityId
         entityId& operator=(const uint64_t& rhs);
         char* EntityIdStr();
         entityId& operator()();
+
+        entityId(uint64_t id);
 };
 
 #endif // H_ENTITYID_ACCESSOR
-

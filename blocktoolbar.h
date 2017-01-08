@@ -18,7 +18,7 @@ class BlockToolbar
             uint8_t Index;
             //Item???
             std::string Action;
-            class entityId* BlockEntityId;
+            entityId* BlockEntityId;
         };
         enum TOOLBAR_TYPE {TOOLBAR_CHARACTER};
 

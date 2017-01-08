@@ -14,3 +14,5 @@ entityId& entityId::operator()()
 {
     return *this;
 }
+
+entityId::entityId(uint64_t id) : EntityId(id) {sprintf(entityIdStr, "%I64d", id);}

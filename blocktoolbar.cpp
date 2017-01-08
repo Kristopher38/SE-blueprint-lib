@@ -53,7 +53,7 @@ void BlockToolbar::AddEntry(uint8_t index, std::string action, entityId* blockEn
 
 void BlockToolbar::AddEntry(uint8_t index, std::string action, ITerminalBlock* cubeblock)
 {
-    this->AddEntry(index, action, &cubeblock->EntityId());
+    this->AddEntry(index, action, cubeblock->EntityId.getptr());
 }
 
 void BlockToolbar::RemoveEntry(uint8_t index)

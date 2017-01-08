@@ -2,6 +2,7 @@
 #define H_TERMINALBLOCK
 
 #include <string>
+#include <memory>
 #include <rapidxml/rapidxml.hpp>
 #include "cubeblock.h"
 #include "entityid_accessor.h"
@@ -11,21 +12,21 @@ using namespace rapidxml;
 class ITerminalBlock : public ICubeBlock // shows in terminal
 {
     protected:
-        std::string CustomName;
+
         virtual void AppendAttributes(rapidxml::xml_node<>* block);
 
     public:
         enum SHARE_MODE {SHARE_NONE, SHARE_FACTION, SHARE_ALL};
 
+        Accessor<entityId> EntityId = EntityId(0);
         Accessor<bool> ShowOnHUD = true;
         Accessor<bool> ShowInTerminal = true;
         Accessor<bool> ShowInToolbarConfig = true;
         Accessor<bool> ShowInInventory = true;
-        Accessor<entityId> EntityId = entityId();
-
         Accessor<bool> HasOwnership = false;
         Accessor<uint64_t> Owner = 0;
         Accessor<SHARE_MODE> ShareMode = SHARE_NONE;
+        Accessor<std::string> CustomName = std::string();
 
         ITerminalBlock();
         virtual ~ITerminalBlock();

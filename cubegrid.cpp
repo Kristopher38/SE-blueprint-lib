@@ -61,7 +61,7 @@ void CubeGrid::AppendXml(rapidxml::xml_node<>* cubegrids_node, uint64_t* entity_
     {
         ITerminalBlock* myTerminalBlock = dynamic_cast<ITerminalBlock*>(blocks[i].get());
         if (myTerminalBlock)
-            myTerminalBlock->EntityId() = (*entity_counter)++;
+            myTerminalBlock->EntityId = (*entity_counter)++;
         if (Parameters.BlocksInheritGridSize)
             blocks[i]->Size = Parameters.GridSize;
 

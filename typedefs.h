@@ -60,6 +60,10 @@ template <typename T> class Accessor
             std::cout<<"Assigning value by (T arg)"<<std::endl;
             return this->value;
         }
+        T* getptr()
+        {
+            return &this->value;
+        }
         inline bool operator< (const Accessor& rhs) const { return this->value < rhs.value; }
         inline bool operator> (const Accessor& rhs) const { return this->value > rhs.value; }
         inline bool operator<=(const Accessor& rhs) const { return this->value <= rhs.value; }
@@ -79,7 +83,7 @@ template <typename T> class Accessor
         {
             this->value = defaultValue;
             this->isdefault = true;
-            return &this->value;
+            return this->value;
         }
 };
 
