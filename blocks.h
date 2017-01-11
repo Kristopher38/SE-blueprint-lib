@@ -15,6 +15,21 @@ class ArmorBlock : public ICubeBlock
 
         std::string ObjectBuilder() override {return "CubeBlock";}
         std::string SubtypeName() override {return (this->Size() ? "LargeBlockArmorBlock" : "SmallBlockArmorBlock");}
+
+        virtual std::shared_ptr<ICubeBlock> clone() const
+        {
+            return std::make_shared<ArmorBlock>(*this);
+        }
+
+        bool operator==(ArmorBlock& rhs)
+        {
+            bool ret = ICubeBlock::operator==(*dynamic_cast<IFunctionalBlock*>(&rhs));
+            return (true && ret);
+        }
+        bool operator!=(ArmorBlock& rhs)
+        {
+            return !(*this==rhs);
+        }
 };
 
 class Door : public IFunctionalBlock

@@ -23,16 +23,16 @@ class CubeGrid
 
     public:
         CubeGridParams Parameters;
-        IBlocksVector<ICubeBlock> blocks;
+        BlocksVector<ICubeBlock> blocks;
 
     private:
-        CubeGrid(CubeGridParams parameters, IBlocksVector<ICubeBlock> cubeblocks) : Parameters(parameters), blocks(cubeblocks) {}
-        IBlocksVector<ICubeBlock> CloneBlocks(IBlocksVector<ICubeBlock> to_clone)
+        CubeGrid(CubeGridParams parameters, BlocksVector<ICubeBlock> cubeblocks) : Parameters(parameters), blocks(cubeblocks) {}
+        BlocksVector<ICubeBlock> CloneBlocks(BlocksVector<ICubeBlock> to_clone)
         {
-            auto cloner = [](const Block<ICubeBlock>& ptr) -> Block<ICubeBlock>
+            auto cloner = [](const Blockptr<ICubeBlock>& ptr) -> Blockptr<ICubeBlock>
                 {return ptr->clone();};
 
-            IBlocksVector<ICubeBlock> cloned;
+            BlocksVector<ICubeBlock> cloned;
             std::transform(to_clone.begin(), to_clone.end(), std::back_inserter(cloned), cloner);
             return cloned;
         }
@@ -43,7 +43,9 @@ class CubeGrid
 
         CubeGrid(const CubeGrid& cubegrid) : Parameters(cubegrid.Parameters), blocks(CloneBlocks(cubegrid.blocks)) {}
 
-        std::size_t FindBlock(int x, int y, int z);
+        static void TranslateCoords(BlocksVector<ICubeBlock>* to_translate, int x, int y, int z);
+        void TranslateCoords(int x, int y, int z);
+        void AttachCubegrid(CubeGrid& cubegrid, int x = 0, int y = 0, int z = 0);
 };
 
 #endif // H_CUBEGRID

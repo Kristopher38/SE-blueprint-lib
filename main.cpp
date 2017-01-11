@@ -15,65 +15,60 @@ int main()
     try
     {
         Blueprint Bp("Orientation testing", "Kristopher38", mySteamId);
-        Bp.Cubegrids.push_back(CubeGrid());
-        TimerBlock timer;
+        CubeGrid waffle;
+        waffle.Parameters.BlocksInheritGridSize = true;
+        waffle.Parameters.GridSize = SIZE_LARGE;
+        waffle.Parameters.DisplayName = "waffle no. 1";
+        waffle.Parameters.IsStatic = true;
+        ArmorBlock cube;
+        for (unsigned i = 0; i < 2; i++)
+        {
+            cube.Coords.x = 0;
+            cube.Coords.y = 0;
+            cube.Coords.z = i;
+            waffle.blocks.AddBlock(cube);
+            cube.Coords.x = 1;
+            cube.Coords.y = 0;
+            waffle.blocks.AddBlock(cube);
+            cube.Coords.x = 2;
+            cube.Coords.y = 0;
+            waffle.blocks.AddBlock(cube);
+            cube.Coords.x = 0;
+            cube.Coords.y = -1;
+            waffle.blocks.AddBlock(cube);
+            cube.Coords.x = 1;
+            cube.Coords.y = -1;
+            waffle.blocks.AddBlock(cube);
+            cube.Coords.x = 0;
+            cube.Coords.y = -2;
+            waffle.blocks.AddBlock(cube);
+        }
+        Bp.Cubegrids.push_back(waffle);
 
-        timer.Coords.x = 5;
-        timer.Coords.y = 3;
-        timer.Coords.z = 7;
-        timer.ColorMaskHSV.Hue = 1.0f;
-        timer.CustomName = "Timer Block";
-        Bp.Cubegrids[0].blocks.AddBlock(timer);
-        timer.Coords.x = 6;
-        timer.Coords.y = 2;
-        timer.Coords.z = 9;
-        timer.CustomName = "Timer Block";
-        Bp.Cubegrids[0].blocks.AddBlock(timer);
-        timer.Coords.x = 6;
-        timer.Coords.y = 1;
-        timer.Coords.z = 3;
-        timer.Delay = 1234;
-        Bp.Cubegrids[0].blocks.AddBlock(timer);
-        timer = TimerBlock();
-        timer.Coords.x = 78;
-        timer.Coords.y = 8;
-        timer.Coords.z = 46;
-        Bp.Cubegrids[0].blocks.AddBlock(timer);
-        TimerBlock* timerptr = Bp.Cubegrids[0].blocks.AddBlock(timer);
-
-        Bp.Cubegrids[0].blocks.GetBlock(timer).Toolbar.AddEntry(0, "OnOff_On", timerptr);
-        TimerBlock timer2;
-        timer2.Coords.x = 6;
-        timer2.Coords.y = 2;
-        timer2.Coords.z = 9;
-
-        Bp.Cubegrids[0].blocks.GetBlock(timer).Toolbar.AddEntry(1, "OnOff", &Bp.Cubegrids[0].blocks.GetBlock(timer2));
-
-        Bp.Cubegrids[0].blocks.GetBlock(timer).Delay = 4321;
-        timer2.Coords.x = 27;
-        timer2.Coords.y = 23;
-        timer2.Coords.z = 12;
-        Bp.Cubegrids[0].blocks.AddBlock(timer2);
-
-        TimerBlock timertemplate;
-        timertemplate.Coords.x = 6;
-        timertemplate.Coords.y = 2;
-        timertemplate.Coords.z = 9;
-        timertemplate = TimerBlock();
-        Bp.Cubegrids[0].blocks.GetBlocksWithName<TimerBlock>("Timer Block").GetBlockWithName<TimerBlock>("Timer Block").Coords.z = 10;
-        Bp.Cubegrids[0].blocks.GetBlockWithCoords<TimerBlock>(78, 8, 46).Delay = 23542423;
-        Bp.Cubegrids[0].blocks.GetBlocksWithCoords<TimerBlock>(78, 8, 46).front()->Delay = 9999;
-
-        std::cout<<"Saving output to file"<<std::endl;
+        CubeGrid crumb;
+        for (unsigned i = 0; i < 2; i++)
+        {
+            cube.Coords.x = 0;
+            cube.Coords.y = 0;
+            cube.Coords.z = i;
+            crumb.blocks.AddBlock(cube);
+            cube.Coords.x = 1;
+            cube.Coords.y = 0;
+            crumb.blocks.AddBlock(cube);
+            cube.Coords.x = 1;
+            cube.Coords.y = 1;
+            crumb.blocks.AddBlock(cube);
+        }
+        crumb.TranslateCoords(1, -2, 1);
+        Bp.Cubegrids.back().AttachCubegrid(crumb);
 
         fstream output("bp.sbc", std::fstream::out);
         if (output.is_open())
             Bp.Print(output, false);
-
         else cout<<"Error writing to file"<<endl;
     }
     catch (rapidxml::parse_error &e)
     {
-        cout<<"rapidxml error! "<<e.what()<<endl;
+        cout<<"rapidxml exception: "<<e.what()<<endl;
     }
 }

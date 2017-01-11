@@ -69,6 +69,9 @@ template <typename T> class Accessor
         inline bool operator==(const Accessor& rhs) const { return this->value == rhs.value || isdefault; }
         inline bool operator!=(const Accessor& rhs) const { return !(this->value == rhs.value); }
 
+        //inline Accessor& operator+(const Accessor& rhs) {this->value += rhs; return *this;}
+        inline Accessor& operator+=(const Accessor& rhs) {this->value += rhs.value; return *this;}
+
         Accessor() : isdefault(true) {}
         Accessor(T val) : value(val), defaultValue(val), isdefault(true) {}
 

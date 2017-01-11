@@ -2,22 +2,6 @@
 
 using namespace rapidxml;
 
-std::size_t CubeGrid::FindBlock(int x, int y, int z)
-{
-    for (std::size_t i = 0; i < blocks.size(); ++i)
-    {
-        if (blocks[i]->Coords.x() != x)
-            continue;
-        if (blocks[i]->Coords.y() != y)
-            continue;
-        if (blocks[i]->Coords.z() != z)
-            continue;
-
-        return i;
-    }
-    return -1;
-}
-
 void CubeGrid::AppendXml(rapidxml::xml_node<>* cubegrids_node, uint64_t* entity_counter)
 {
     rapidxml::xml_document<>* doc = cubegrids_node->document();
@@ -76,4 +60,26 @@ void CubeGrid::AppendXml(rapidxml::xml_node<>* cubegrids_node, uint64_t* entity_
     cubegrid->append_node(doc->allocate_node(node_element, "DestructibleBlocks", Parameters.DestructibleBlocks ? "true" : "false"));
     cubegrid->append_node(doc->allocate_node(node_element, "IsRespawnGrid", Parameters.IsRespawnGrid ? "true" : "false"));
     cubegrid->append_node(doc->allocate_node(node_element, "LocalCoordSys", doc->allocate_string(std::to_string(Parameters.LocalCoordSys).c_str())));
+}
+
+void CubeGrid::TranslateCoords(BlocksVector<ICubeBlock>* to_translate, int x, int y, int z)
+{
+    for (BlocksVector<ICubeBlock>::iterator it = to_translate->begin(); it != to_translate->end(); ++it)
+    {
+        (*it)->Coords.x += x;
+        (*it)->Coords.y += y;
+        (*it)->Coords.z += z;
+    }
+}
+
+void CubeGrid::TranslateCoords(int x, int y, int z)
+{
+    CubeGrid::TranslateCoords(&this->blocks, x, y, z);
+}
+
+void CubeGrid::AttachCubegrid(CubeGrid& cubegrid, int x, int y, int z)
+{
+    BlocksVector<ICubeBlock> to_attach = cubegrid.CloneBlocks(cubegrid.blocks);
+    CubeGrid::TranslateCoords(&to_attach, x, y, z);
+    blocks.insert(blocks.end(), to_attach.begin(), to_attach.end());
 }
