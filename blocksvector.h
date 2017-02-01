@@ -20,7 +20,7 @@ public:
     {
         if (cubeblock)
         {
-            BlockptrVec<BlockT>::push_back(Blockptr<T>(cubeblock));
+            BlockptrVec<BlockT>::push_back(std::shared_ptr<BlockT>(cubeblock, [](BlockT*){})); // empty deleter to avoid deleting pointer when shared_ptr deletes - memory management relies on user with pointers
             return dynamic_cast<T*>(BlockptrVec<BlockT>::back().get());
         } else return nullptr;
     }

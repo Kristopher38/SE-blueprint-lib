@@ -7,6 +7,7 @@
 #include <vector>
 #include <memory>
 #include <algorithm>
+#include <set>
 #include <rapidxml/rapidxml.hpp>
 #include "cubeblock.h"
 #include "terminalblock.h"

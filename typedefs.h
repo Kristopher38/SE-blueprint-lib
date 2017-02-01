@@ -31,6 +31,7 @@ struct CubeGridParams
     int LocalCoordSys = 0;
 
     bool BlocksInheritGridSize = true;
+    bool CheckForDuplicateCoords = true;
 };
 
 template <typename T> class Accessor

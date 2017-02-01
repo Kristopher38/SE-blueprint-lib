@@ -77,9 +77,32 @@ void CubeGrid::TranslateCoords(int x, int y, int z)
     CubeGrid::TranslateCoords(&this->blocks, x, y, z);
 }
 
+/*struct Coordinates
+{
+    int x;
+    int y;
+    int z;
+    Coordinates(int i_x, int i_y, int i_z) : x(i_x), y(i_y), z(i_z) {}
+    bool operator()(const Coordinates& lhs, const Coordinates& rhs) const
+    {
+        return lhs < rhs;
+    }
+};*/
+
 void CubeGrid::AttachCubegrid(CubeGrid& cubegrid, int x, int y, int z)
 {
     BlocksVector<ICubeBlock> to_attach = cubegrid.CloneBlocks(cubegrid.blocks);
     CubeGrid::TranslateCoords(&to_attach, x, y, z);
     blocks.insert(blocks.end(), to_attach.begin(), to_attach.end());
+
+    /*std::set<Coordinates> cubeCoords;
+    for (BlocksVector<ICubeBlock>::iterator it = blocks.begin(); it != blocks.end(); ++it)
+    {
+        cubeCoords.insert(Coordinates((**it).Coords.x(), (**it).Coords.y(), (**it).Coords.z()));
+    }
+
+    if (this->Parameters.CheckForDuplicateCoords)
+    {
+
+    }*/
 }
