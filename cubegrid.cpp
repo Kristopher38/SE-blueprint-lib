@@ -2,14 +2,14 @@
 
 using namespace rapidxml;
 
-void CubeGrid::AppendXml(rapidxml::xml_node<>* cubegrids_node, uint64_t* entity_counter)
+void CubeGrid::AppendXml(rapidxml::xml_node<>* cubegrids_node)
 {
     rapidxml::xml_document<>* doc = cubegrids_node->document();
     rapidxml::xml_node<>* cubegrid = doc->allocate_node(node_element, "CubeGrid");
     cubegrids_node->append_node(cubegrid);
 
     cubegrid->append_node(doc->allocate_node(node_element, "SubtypeName"));
-    cubegrid->append_node(doc->allocate_node(node_element, "EntityId", doc->allocate_string(std::to_string(*this->EntityId).c_str())));
+    cubegrid->append_node(doc->allocate_node(node_element, "EntityId", doc->allocate_string(std::to_string(*this->entityId).c_str())));
     cubegrid->append_node(doc->allocate_node(node_element, "PersistentFlags", "CastShadows InScene"));
     cubegrid->append_node(doc->allocate_node(node_element, "PositionAndOrientation"));
 

@@ -42,7 +42,7 @@ void BlockToolbar::AppendAttributes(rapidxml::xml_node<>* block)
 
 }
 
-void BlockToolbar::AddEntry(uint8_t index, std::string action, std::shared_ptr<uint64_t> blockEntityId)
+void BlockToolbar::AddEntry(uint8_t index, std::string action, EntityId blockEntityId)
 {
     Slot item;
     item.Index = index;
@@ -53,12 +53,12 @@ void BlockToolbar::AddEntry(uint8_t index, std::string action, std::shared_ptr<u
 
 void BlockToolbar::AddEntry(uint8_t index, std::string action, ITerminalBlock* cubeblock)
 {
-    this->AddEntry(index, action, cubeblock->EntityId);
+    this->AddEntry(index, action, cubeblock->entityId);
 }
 
 void BlockToolbar::AddEntry(uint8_t index, std::string action, ITerminalBlock& cubeblock)
 {
-    this->AddEntry(index, action, cubeblock.EntityId);
+    this->AddEntry(index, action, cubeblock.entityId);
 }
 
 void BlockToolbar::RemoveEntry(uint8_t index)

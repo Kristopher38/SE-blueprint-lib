@@ -12,14 +12,14 @@ Blueprint::~Blueprint()
 
 void Blueprint::AssignEntityIds()
 {
-    for (std::size_t i = 0; i < Cubegrids.size(); ++i)
+    for (std::vector<CubeGrid>::iterator it = Cubegrids.begin(); it != Cubegrids.end(); ++it)
     {
-        *Cubegrids[i].EntityId = entity_counter++;
-        for (BlocksVector<ICubeBlock>::iterator b_it = Cubegrids[i].blocks.begin(); b_it != Cubegrids[i].blocks.end(); ++b_it)
+        *it->entityId = entity_counter++;
+        for (BlocksVector<ICubeBlock>::iterator b_it = it->blocks.begin(); b_it != it->blocks.end(); ++b_it)
         {
             ITerminalBlock* myTerminalBlock = dynamic_cast<ITerminalBlock*>(b_it->get());
             if (myTerminalBlock)
-                *myTerminalBlock->EntityId = entity_counter++;
+                *myTerminalBlock->entityId = entity_counter++;
         }
     }
 }
@@ -57,7 +57,7 @@ void Blueprint::BuildXml()
     node->append_node(doc->allocate_node(node_element, "DisplayName", doc->allocate_string(author_name.c_str())));
     node->append_node(doc->allocate_node(node_element, "CubeGrids"));
     for (std::size_t i = 0; i < Cubegrids.size(); ++i)
-        Cubegrids[i].AppendXml(node->last_node(), &entity_counter);
+        Cubegrids[i].AppendXml(node->last_node());
     node->append_node(doc->allocate_node(node_element, "WorkshopId", "0"));
     node->append_node(doc->allocate_node(node_element, "OwnerSteamId", doc->allocate_string(std::to_string(author_steam_id).c_str())));
     node->append_node(doc->allocate_node(node_element, "Points", "0"));

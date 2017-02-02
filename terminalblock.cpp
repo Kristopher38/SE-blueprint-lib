@@ -4,7 +4,7 @@ using namespace rapidxml;
 
 ITerminalBlock::ITerminalBlock() : CustomName(std::string())
 {
-    this->EntityId = std::make_shared<uint64_t>(0);
+    this->entityId = std::make_shared<uint64_t>(0);
 }
 
 ITerminalBlock::~ITerminalBlock() {}
@@ -18,7 +18,7 @@ void ITerminalBlock::AppendAttributes(rapidxml::xml_node<>* block)
     block->append_node(doc->allocate_node(node_element, "ShowOnHUD", ShowOnHUD() ? "true" : "false"));
     block->append_node(doc->allocate_node(node_element, "ShowInTerminal", ShowInTerminal() ? "true" : "false"));
     block->append_node(doc->allocate_node(node_element, "ShowInInventory", ShowInInventory() ? "true" : "false"));
-    block->append_node(doc->allocate_node(node_element, "EntityId", doc->allocate_string(std::to_string(*EntityId).c_str())));
+    block->append_node(doc->allocate_node(node_element, "EntityId", doc->allocate_string(std::to_string(*entityId).c_str())));
     if (HasOwnership())
     {
         block->append_node(doc->allocate_node(node_element, "Owner", doc->allocate_string(std::to_string(Owner()).c_str())));

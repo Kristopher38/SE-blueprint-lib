@@ -5,20 +5,23 @@
 #include <memory>
 #include <rapidxml/rapidxml.hpp>
 #include "cubeblock.h"
-#include "entityid_accessor.h"
 
 using namespace rapidxml;
 
+typedef std::shared_ptr<uint64_t> EntityId;
+
 class ITerminalBlock : public ICubeBlock // shows in terminal
 {
-    protected:
+    friend class BlockToolbar;
+    friend class Blueprint;
 
+    protected:
         virtual void AppendAttributes(rapidxml::xml_node<>* block);
+        EntityId entityId;
 
     public:
         enum SHARE_MODE {SHARE_NONE, SHARE_FACTION, SHARE_ALL};
 
-        std::shared_ptr<uint64_t> EntityId;
         Accessor<bool> ShowOnHUD = true;
         Accessor<bool> ShowInTerminal = true;
         Accessor<bool> ShowInToolbarConfig = true;
