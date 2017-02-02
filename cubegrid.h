@@ -25,6 +25,7 @@ class CubeGrid
     public:
         CubeGridParams Parameters;
         BlocksVector<ICubeBlock> blocks;
+        std::shared_ptr<uint64_t> EntityId;
 
     private:
         CubeGrid(CubeGridParams parameters, BlocksVector<ICubeBlock> cubeblocks) : Parameters(parameters), blocks(cubeblocks) {}
@@ -39,10 +40,16 @@ class CubeGrid
         }
 
     public:
-        CubeGrid(CubeGridParams parameters = CubeGridParams()) : Parameters(parameters) {}
+        CubeGrid(CubeGridParams parameters = CubeGridParams()) : Parameters(parameters)
+        {
+            this->EntityId = std::make_shared<uint64_t>(0);
+        }
         ~CubeGrid() {}
 
-        CubeGrid(const CubeGrid& cubegrid) : Parameters(cubegrid.Parameters), blocks(CloneBlocks(cubegrid.blocks)) {}
+        CubeGrid(const CubeGrid& cubegrid) : Parameters(cubegrid.Parameters), blocks(CloneBlocks(cubegrid.blocks))
+        {
+            this->EntityId = cubegrid.EntityId;
+        }
 
         static void TranslateCoords(BlocksVector<ICubeBlock>* to_translate, int x, int y, int z);
         void TranslateCoords(int x, int y, int z);

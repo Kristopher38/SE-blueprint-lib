@@ -10,10 +10,26 @@ Blueprint::~Blueprint()
         delete doc;
 }
 
+void Blueprint::AssignEntityIds()
+{
+    for (std::size_t i = 0; i < Cubegrids.size(); ++i)
+    {
+        *Cubegrids[i].EntityId = entity_counter++;
+        for (BlocksVector<ICubeBlock>::iterator b_it = Cubegrids[i].blocks.begin(); b_it != Cubegrids[i].blocks.end(); ++b_it)
+        {
+            ITerminalBlock* myTerminalBlock = dynamic_cast<ITerminalBlock*>(b_it->get());
+            if (myTerminalBlock)
+                *myTerminalBlock->EntityId = entity_counter++;
+        }
+    }
+}
+
 void Blueprint::BuildXml()
 {
     if (!doc)
         doc = new rapidxml::xml_document<>;
+
+    this->AssignEntityIds();
 
     rapidxml::xml_node<> *node;
     node = doc->allocate_node(node_declaration);

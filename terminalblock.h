@@ -18,7 +18,7 @@ class ITerminalBlock : public ICubeBlock // shows in terminal
     public:
         enum SHARE_MODE {SHARE_NONE, SHARE_FACTION, SHARE_ALL};
 
-        Accessor<entityId> EntityId = EntityId(0);
+        std::shared_ptr<uint64_t> EntityId;
         Accessor<bool> ShowOnHUD = true;
         Accessor<bool> ShowInTerminal = true;
         Accessor<bool> ShowInToolbarConfig = true;

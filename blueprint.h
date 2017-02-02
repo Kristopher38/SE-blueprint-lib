@@ -29,6 +29,7 @@ class Blueprint
         Blueprint(std::string blueprint_name = "", std::string author_name = "", uint64_t author_steam_id = 0);
         ~Blueprint();
 
+        void AssignEntityIds();
         void BuildXml();
         void Print(std::ostream& out, bool no_indenting);
 };

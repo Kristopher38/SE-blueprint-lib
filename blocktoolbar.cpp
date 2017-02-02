@@ -36,13 +36,13 @@ void BlockToolbar::AppendAttributes(rapidxml::xml_node<>* block)
         block = block->last_node();
         block->append_attribute(doc->allocate_attribute("xsi:type", "MyObjectBuilder_ToolbarItemTerminalBlock"));
         block->append_node(doc->allocate_node(node_element, "Action", doc->allocate_string(Slots[i].Action.c_str())));
-        block->append_node(doc->allocate_node(node_element, "BlockEntityId", Slots[i].BlockEntityId->EntityIdStr()));
+        block->append_node(doc->allocate_node(node_element, "BlockEntityId", doc->allocate_string(std::to_string(*Slots[i].BlockEntityId).c_str())));
         block = block->parent()->parent();
     }
 
 }
 
-void BlockToolbar::AddEntry(uint8_t index, std::string action, entityId* blockEntityId)
+void BlockToolbar::AddEntry(uint8_t index, std::string action, std::shared_ptr<uint64_t> blockEntityId)
 {
     Slot item;
     item.Index = index;
@@ -53,7 +53,12 @@ void BlockToolbar::AddEntry(uint8_t index, std::string action, entityId* blockEn
 
 void BlockToolbar::AddEntry(uint8_t index, std::string action, ITerminalBlock* cubeblock)
 {
-    this->AddEntry(index, action, cubeblock->EntityId.getptr());
+    this->AddEntry(index, action, cubeblock->EntityId);
+}
+
+void BlockToolbar::AddEntry(uint8_t index, std::string action, ITerminalBlock& cubeblock)
+{
+    this->AddEntry(index, action, cubeblock.EntityId);
 }
 
 void BlockToolbar::RemoveEntry(uint8_t index)

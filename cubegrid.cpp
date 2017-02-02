@@ -9,7 +9,7 @@ void CubeGrid::AppendXml(rapidxml::xml_node<>* cubegrids_node, uint64_t* entity_
     cubegrids_node->append_node(cubegrid);
 
     cubegrid->append_node(doc->allocate_node(node_element, "SubtypeName"));
-    cubegrid->append_node(doc->allocate_node(node_element, "EntityId", doc->allocate_string(std::to_string((*entity_counter)++).c_str())));
+    cubegrid->append_node(doc->allocate_node(node_element, "EntityId", doc->allocate_string(std::to_string(*this->EntityId).c_str())));
     cubegrid->append_node(doc->allocate_node(node_element, "PersistentFlags", "CastShadows InScene"));
     cubegrid->append_node(doc->allocate_node(node_element, "PositionAndOrientation"));
 
@@ -43,9 +43,6 @@ void CubeGrid::AppendXml(rapidxml::xml_node<>* cubegrids_node, uint64_t* entity_
     cubegrid->append_node(doc->allocate_node(node_element, "CubeBlocks"));
     for (std::size_t i = 0; i < blocks.size(); ++i)
     {
-        ITerminalBlock* myTerminalBlock = dynamic_cast<ITerminalBlock*>(blocks[i].get());
-        if (myTerminalBlock)
-            myTerminalBlock->EntityId = (*entity_counter)++;
         if (Parameters.BlocksInheritGridSize)
             blocks[i]->Size = Parameters.GridSize;
 
