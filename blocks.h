@@ -54,13 +54,13 @@ class Door : public IFunctionalBlock
         virtual std::string SubtypeName() override {return std::string();}
 };
 
-class TimerBlock : public IFunctionalBlock
+class TimerBlock : public IFunctionalBlock, public Toolbar
 {
     protected:
         virtual void AppendAttributes(rapidxml::xml_node<>* block)
         {
             IFunctionalBlock::AppendAttributes(block);
-            Toolbar.AppendAttributes(block);
+            toolbar.AppendAttributes(block);
             rapidxml::xml_document<>* doc = block->document();
             block->append_node(doc->allocate_node(node_element, "Delay", doc->allocate_string(std::to_string(Delay()).c_str())));
             block->append_node(doc->allocate_node(node_element, "CurrentTime", doc->allocate_string(std::to_string(CurrentTime()).c_str())));
@@ -73,7 +73,6 @@ class TimerBlock : public IFunctionalBlock
         Accessor<unsigned> CurrentTime = 0;
         Accessor<bool> IsCountingDown = false;
         Accessor<bool> Silent = false;
-        BlockToolbar Toolbar;
 
         TimerBlock() {}
         virtual ~TimerBlock() {}

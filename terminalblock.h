@@ -14,6 +14,7 @@ class ITerminalBlock : public ICubeBlock // shows in terminal
 {
     friend class BlockToolbar;
     friend class Blueprint;
+    friend class CubeGrid;
 
     protected:
         virtual void AppendAttributes(rapidxml::xml_node<>* block);
@@ -41,10 +42,10 @@ class ITerminalBlock : public ICubeBlock // shows in terminal
                     this->ShowInTerminal == rhs.ShowInTerminal &&
                     this->ShowInToolbarConfig == rhs.ShowInToolbarConfig &&
                     this->ShowInInventory == rhs.ShowInInventory &&
-                    //this->EntityId == rhs.EntityId &&
                     this->HasOwnership == rhs.HasOwnership &&
                     this->Owner == rhs.Owner &&
                     this->ShareMode == rhs.ShareMode &&
+                    this->CustomName == rhs.CustomName &&
                     ret);
         }
         virtual bool operator!=(ITerminalBlock& rhs)

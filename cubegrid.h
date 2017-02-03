@@ -13,6 +13,7 @@
 #include "terminalblock.h"
 #include "typedefs.h"
 #include "blocksvector.h"
+#include "blocktoolbar.h"
 
 using namespace rapidxml;
 
@@ -29,24 +30,13 @@ class CubeGrid
 
     private:
         CubeGrid(CubeGridParams parameters, BlocksVector<ICubeBlock> cubeblocks) : Parameters(parameters), blocks(cubeblocks) {}
-        BlocksVector<ICubeBlock> CloneBlocks(BlocksVector<ICubeBlock> to_clone)
-        {
-            auto cloner = [](const Blockptr<ICubeBlock>& ptr) -> Blockptr<ICubeBlock>
-                {return ptr->clone();};
-
-            BlocksVector<ICubeBlock> cloned;
-            std::transform(to_clone.begin(), to_clone.end(), std::back_inserter(cloned), cloner);
-            return cloned;
-        }
+        BlocksVector<ICubeBlock> CloneBlocks(BlocksVector<ICubeBlock> to_clone);
 
     public:
-        CubeGrid(CubeGridParams parameters = CubeGridParams()) : Parameters(parameters)
-        {
-            this->entityId = std::make_shared<uint64_t>(0);
-        }
+        CubeGrid(CubeGridParams parameters = CubeGridParams()) : entityId(std::make_shared<uint64_t>(0)), Parameters(parameters) {}
         ~CubeGrid() {}
 
-        CubeGrid(const CubeGrid& cubegrid) : entityId(cubegrid.entityId), Parameters(cubegrid.Parameters), blocks(CloneBlocks(cubegrid.blocks)) {}
+        CubeGrid(const CubeGrid& cubegrid) : entityId(std::make_shared<uint64_t>(0)), Parameters(cubegrid.Parameters), blocks(CloneBlocks(cubegrid.blocks)) {}
 
         static void TranslateCoords(BlocksVector<ICubeBlock>* to_translate, int x, int y, int z);
         void TranslateCoords(int x, int y, int z);

@@ -59,6 +59,42 @@ void CubeGrid::AppendXml(rapidxml::xml_node<>* cubegrids_node)
     cubegrid->append_node(doc->allocate_node(node_element, "LocalCoordSys", doc->allocate_string(std::to_string(Parameters.LocalCoordSys).c_str())));
 }
 
+BlocksVector<ICubeBlock> CubeGrid::CloneBlocks(BlocksVector<ICubeBlock> to_clone)
+{
+    BlocksVector<ICubeBlock> cloned;
+    std::vector<std::pair<std::shared_ptr<uint64_t>,std::shared_ptr<uint64_t>>> entityid_vec;
+
+    for (BlocksVector<ICubeBlock>::iterator it = to_clone.begin(); it != to_clone.end(); ++it)
+    {
+        Blockptr<ICubeBlock> cloned_block = it->get()->clone();
+        Blockptr<ITerminalBlock> myTerminalBlock = std::dynamic_pointer_cast<ITerminalBlock>(*it);
+        if (myTerminalBlock)
+        {
+            std::shared_ptr<uint64_t> old_entityid = myTerminalBlock->entityId;
+            myTerminalBlock->entityId = std::make_shared<uint64_t>(0);
+            std::shared_ptr<uint64_t> new_entityid = myTerminalBlock->entityId;
+            entityid_vec.push_back(std::make_pair(old_entityid, new_entityid));
+        }
+        cloned.push_back(cloned_block);
+    }
+    for (BlocksVector<ICubeBlock>::iterator it = to_clone.begin(); it != to_clone.end(); ++it)
+    {
+        std::shared_ptr<Toolbar> myToolbarBlock = std::dynamic_pointer_cast<Toolbar>(*it);
+        if (myToolbarBlock)
+        {
+            for (std::vector<BlockToolbar::Slot>::iterator it_slot = myToolbarBlock.get()->toolbar.Slots.begin(); it_slot != myToolbarBlock.get()->toolbar.Slots.end(); ++it_slot)
+            {
+                for (std::vector<std::pair<std::shared_ptr<uint64_t>, std::shared_ptr<uint64_t>>>::iterator it_id = entityid_vec.begin(); it_id != entityid_vec.end(); ++it_id)
+                {
+                    if (it_slot->BlockEntityId.get() == it_id->first.get())
+                        it_slot->BlockEntityId = it_id->second;
+                }
+            }
+        }
+    }
+    return cloned;
+}
+
 void CubeGrid::TranslateCoords(BlocksVector<ICubeBlock>* to_translate, int x, int y, int z)
 {
     for (BlocksVector<ICubeBlock>::iterator it = to_translate->begin(); it != to_translate->end(); ++it)

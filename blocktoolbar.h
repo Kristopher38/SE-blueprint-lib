@@ -11,6 +11,7 @@ using namespace rapidxml;
 
 class BlockToolbar
 {
+    friend class CubeGrid;
     private:
         struct Slot
         {
@@ -35,6 +36,12 @@ class BlockToolbar
         void AddEntry(uint8_t index, std::string action, ITerminalBlock* cubeblock);
         void AddEntry(uint8_t index, std::string action, ITerminalBlock& cubeblock);
         void RemoveEntry(uint8_t index);
+};
+
+class Toolbar
+{
+    public:
+        BlockToolbar toolbar;
 };
 
 #endif // H_BLOCKTOOLBAR
