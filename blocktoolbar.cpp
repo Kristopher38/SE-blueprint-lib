@@ -74,11 +74,14 @@ void BlockToolbar::RemoveEntry(uint8_t index)
 
 uint8_t BlockToolbar::FirstEmptySlot()
 {
-    uint8_t max_index;
-    for (std::vector<Slot>::iterator it = Slots.begin(); it != Slots.end(); ++it)
+    if (Slots.size())
     {
-        if (it->Index > max_index)
-            max_index = it->Index;
-    }
-    return max_index;
+        uint8_t max_index = Slots[0].Index;
+        for (std::vector<Slot>::iterator it = Slots.begin(); it != Slots.end(); ++it)
+        {
+            if (it->Index > max_index)
+                max_index = it->Index;
+        }
+        return max_index+1;
+    } else return 0;
 }
