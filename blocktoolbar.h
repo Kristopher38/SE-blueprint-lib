@@ -36,6 +36,7 @@ class BlockToolbar
         void AddEntry(uint8_t index, std::string action, ITerminalBlock* cubeblock);
         void AddEntry(uint8_t index, std::string action, ITerminalBlock& cubeblock);
         void RemoveEntry(uint8_t index);
+        uint8_t FirstEmptySlot();
 };
 
 class Toolbar

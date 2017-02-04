@@ -39,7 +39,6 @@ void BlockToolbar::AppendAttributes(rapidxml::xml_node<>* block)
         block->append_node(doc->allocate_node(node_element, "BlockEntityId", doc->allocate_string(std::to_string(*Slots[i].BlockEntityId).c_str())));
         block = block->parent()->parent();
     }
-
 }
 
 void BlockToolbar::AddEntry(uint8_t index, std::string action, EntityId blockEntityId)
@@ -71,4 +70,15 @@ void BlockToolbar::RemoveEntry(uint8_t index)
             break;
         }
     }
+}
+
+uint8_t FirstEmptySlot()
+{
+    uint8_t max_index;
+    for (std::vector<Slot>::iterator it = Slots.begin(); it != Slots.end(); ++it)
+    {
+        if (it->Index > max_index)
+            max_index = it->Index;
+    }
+    return max_index;
 }
