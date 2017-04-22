@@ -35,20 +35,19 @@ class ITerminalBlock : public ICubeBlock // shows in terminal
         ITerminalBlock();
         virtual ~ITerminalBlock();
 
-        virtual bool operator==(ITerminalBlock& rhs)
+        inline virtual bool operator==(ITerminalBlock& rhs)
         {
-            bool ret = ICubeBlock::operator==(*dynamic_cast<ICubeBlock*>(&rhs));
-            return (this->ShowOnHUD == rhs.ShowOnHUD &&
+            return (ICubeBlock::operator==(*dynamic_cast<ICubeBlock*>(&rhs)) &&
+                    this->ShowOnHUD == rhs.ShowOnHUD &&
                     this->ShowInTerminal == rhs.ShowInTerminal &&
                     this->ShowInToolbarConfig == rhs.ShowInToolbarConfig &&
                     this->ShowInInventory == rhs.ShowInInventory &&
                     this->HasOwnership == rhs.HasOwnership &&
                     this->Owner == rhs.Owner &&
                     this->ShareMode == rhs.ShareMode &&
-                    this->CustomName == rhs.CustomName &&
-                    ret);
+                    this->CustomName == rhs.CustomName);
         }
-        virtual bool operator!=(ITerminalBlock& rhs)
+        inline virtual bool operator!=(ITerminalBlock& rhs)
         {
             return !(*this==rhs);
         }

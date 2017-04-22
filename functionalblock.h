@@ -17,12 +17,12 @@ class IFunctionalBlock : public ITerminalBlock // can be turned on or off
         IFunctionalBlock();
         virtual ~IFunctionalBlock();
 
-        virtual bool operator==(IFunctionalBlock& rhs)
+        inline virtual bool operator==(IFunctionalBlock& rhs)
         {
-            bool ret = ITerminalBlock::operator==(*dynamic_cast<ITerminalBlock*>(&rhs));
-            return (this->Enabled == rhs.Enabled && ret);
+            return (ITerminalBlock::operator==(*dynamic_cast<ITerminalBlock*>(&rhs)) &&
+                    this->Enabled == rhs.Enabled);
         }
-        virtual bool operator!=(IFunctionalBlock& rhs)
+        inline virtual bool operator!=(IFunctionalBlock& rhs)
         {
             return !(*this==rhs);
         }

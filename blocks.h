@@ -16,17 +16,16 @@ class ArmorBlock : public ICubeBlock
         std::string ObjectBuilder() override {return "CubeBlock";}
         std::string SubtypeName() override {return (this->Size() ? "LargeBlockArmorBlock" : "SmallBlockArmorBlock");}
 
-        virtual std::shared_ptr<ICubeBlock> clone() const
+        inline virtual std::shared_ptr<ICubeBlock> clone() const
         {
             return std::make_shared<ArmorBlock>(*this);
         }
 
-        bool operator==(ArmorBlock& rhs)
+        inline bool operator==(ArmorBlock& rhs)
         {
-            bool ret = ICubeBlock::operator==(*dynamic_cast<IFunctionalBlock*>(&rhs));
-            return (true && ret);
+            return ICubeBlock::operator==(*dynamic_cast<IFunctionalBlock*>(&rhs));
         }
-        bool operator!=(ArmorBlock& rhs)
+        inline bool operator!=(ArmorBlock& rhs)
         {
             return !(*this==rhs);
         }
@@ -50,8 +49,8 @@ class Door : public IFunctionalBlock
         Door() {}
         virtual ~Door() {}
 
-        virtual std::string ObjectBuilder() override {return "Door";}
-        virtual std::string SubtypeName() override {return std::string();}
+        inline virtual std::string ObjectBuilder() override {return "Door";}
+        inline virtual std::string SubtypeName() override {return std::string();}
 };
 
 class TimerBlock : public IFunctionalBlock, public Toolbar
@@ -77,24 +76,23 @@ class TimerBlock : public IFunctionalBlock, public Toolbar
         TimerBlock() {}
         virtual ~TimerBlock() {}
 
-        virtual std::string ObjectBuilder() override {return "TimerBlock";}
-        virtual std::string SubtypeName() override {return (this->Size() ? "TimerBlockLarge" : "TimerBlockSmall");}
+        inline virtual std::string ObjectBuilder() override {return "TimerBlock";}
+        inline virtual std::string SubtypeName() override {return (this->Size() ? "TimerBlockLarge" : "TimerBlockSmall");}
 
-        virtual std::shared_ptr<ICubeBlock> clone() const
+        inline virtual std::shared_ptr<ICubeBlock> clone() const
         {
             return std::make_shared<TimerBlock>(*this);
         }
 
-        bool operator==(TimerBlock& rhs)
+        inline bool operator==(TimerBlock& rhs)
         {
-            bool ret = IFunctionalBlock::operator==(*dynamic_cast<IFunctionalBlock*>(&rhs));
-            return (this->Delay == rhs.Delay &&
+            return (IFunctionalBlock::operator==(*dynamic_cast<IFunctionalBlock*>(&rhs)) &&
+                    this->Delay == rhs.Delay &&
                     this->CurrentTime == rhs.CurrentTime &&
                     this->IsCountingDown == rhs.IsCountingDown &&
-                    this->Silent == rhs.Silent &&
-                    ret);
+                    this->Silent == rhs.Silent);
         }
-        bool operator!=(TimerBlock& rhs)
+        inline bool operator!=(TimerBlock& rhs)
         {
             return !(*this==rhs);
         }

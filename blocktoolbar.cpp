@@ -26,7 +26,7 @@ void BlockToolbar::AppendAttributes(rapidxml::xml_node<>* block)
     block = block->parent();
     block->append_node(doc->allocate_node(node_element, "Slots"));
     block = block->last_node();
-    for (uint8_t i = 0; i < Slots.size(); ++i)
+    for (std::size_t i = 0; i < Slots.size(); ++i)
     {
         block->append_node(doc->allocate_node(node_element, "Slot"));
         block = block->last_node();

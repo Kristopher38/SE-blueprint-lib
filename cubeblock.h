@@ -46,7 +46,7 @@ class ICubeBlock // basic class for all cubes
         virtual std::string SubtypeName() = 0;
         virtual std::shared_ptr<ICubeBlock> clone() const = 0;
 
-        virtual bool operator==(ICubeBlock& rhs)
+        inline virtual bool operator==(ICubeBlock& rhs)
         {
             return (this->Coords.x == rhs.Coords.x &&
                     this->Coords.y == rhs.Coords.y &&
@@ -59,7 +59,7 @@ class ICubeBlock // basic class for all cubes
                     this->BuiltBy == rhs.BuiltBy &&
                     this->Size == rhs.Size);
         }
-        virtual bool operator!=(ICubeBlock& rhs)
+        inline virtual bool operator!=(ICubeBlock& rhs)
         {
             return !(*this==rhs);
         }

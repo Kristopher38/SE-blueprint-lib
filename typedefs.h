@@ -42,24 +42,24 @@ template <typename T> class Accessor
         bool isdefault;
 
     public:
-        T& operator=(T arg)
+        inline T& operator=(T arg)
         {
             this->value = arg;
             this->isdefault = false;
             return this->value;
         }
-        T& operator()()
+        inline T& operator()()
         {
             this->isdefault = false;
             return this->value;
         }
-        T& operator()(T arg)
+        inline T& operator()(T arg)
         {
             this->isdefault = false;
             this->value = arg;
             return this->value;
         }
-        T* getptr()
+        inline T* getptr()
         {
             return &this->value;
         }
@@ -76,12 +76,12 @@ template <typename T> class Accessor
         Accessor() : isdefault(true) {}
         Accessor(T val) : value(val), defaultValue(val), isdefault(true) {}
 
-        bool isDefault()
+        inline bool isDefault()
         {
             return isdefault;
         }
 
-        T& reset()
+        inline T& reset()
         {
             this->value = defaultValue;
             this->isdefault = true;
