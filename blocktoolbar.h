@@ -37,6 +37,8 @@ class BlockToolbar
         void AddEntry(uint8_t index, std::string action, ITerminalBlock& cubeblock);
         void RemoveEntry(uint8_t index);
         uint8_t FirstEmptySlot();
+        void DebugPrint(unsigned indent);
+        std::string PrintIndent(unsigned indent);
 };
 
 class Toolbar

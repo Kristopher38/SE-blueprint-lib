@@ -49,6 +49,10 @@ class Door : public IFunctionalBlock
         Door() {}
         virtual ~Door() {}
 
+        inline virtual std::shared_ptr<ICubeBlock> clone() const
+        {
+            return std::make_shared<Door>(*this);
+        }
         inline virtual std::string ObjectBuilder() override {return "Door";}
         inline virtual std::string SubtypeName() override {return std::string();}
 };

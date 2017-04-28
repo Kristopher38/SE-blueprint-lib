@@ -59,39 +59,32 @@ void CubeGrid::AppendXml(rapidxml::xml_node<>* cubegrids_node)
     cubegrid->append_node(doc->allocate_node(node_element, "LocalCoordSys", doc->allocate_string(std::to_string(Parameters.LocalCoordSys).c_str())));
 }
 
-BlocksVector<ICubeBlock> CubeGrid::CloneBlocks(BlocksVector<ICubeBlock> to_clone)
+BlocksVector<ICubeBlock> CubeGrid::CloneBlocks(const BlocksVector<ICubeBlock>& to_clone)
 {
     BlocksVector<ICubeBlock> cloned;
-    std::vector<std::pair<std::shared_ptr<uint64_t>,std::shared_ptr<uint64_t>>> entityid_vec;
+    std::map<uint64_t*, uint64_t*> entityIdPair;
 
-    for (BlocksVector<ICubeBlock>::iterator it = to_clone.begin(); it != to_clone.end(); ++it)
+    for (BlocksVector<ICubeBlock>::const_iterator it = to_clone.cbegin(); it != to_clone.cend(); ++it)
     {
         Blockptr<ICubeBlock> cloned_block = it->get()->clone();
-        Blockptr<ITerminalBlock> myTerminalBlock = std::dynamic_pointer_cast<ITerminalBlock>(*it);
+        Blockptr<ITerminalBlock> myTerminalBlock = std::dynamic_pointer_cast<ITerminalBlock>(cloned_block);
         if (myTerminalBlock)
         {
-            std::shared_ptr<uint64_t> old_entityid = myTerminalBlock->entityId;
+            uint64_t* old_entityid = myTerminalBlock->entityId.get();
             myTerminalBlock->entityId = std::make_shared<uint64_t>(0);
-            std::shared_ptr<uint64_t> new_entityid = myTerminalBlock->entityId;
-            entityid_vec.push_back(std::make_pair(old_entityid, new_entityid));
+            entityIdPair[old_entityid] = myTerminalBlock->entityId.get();   // use old pointer address (old entity id) as a key to new pointer address (new entity id)
         }
         cloned.push_back(cloned_block);
     }
-    for (BlocksVector<ICubeBlock>::iterator it = to_clone.begin(); it != to_clone.end(); ++it)
+
+    for (BlocksVector<ICubeBlock>::iterator it = cloned.begin(); it != cloned.end(); ++it)
     {
         std::shared_ptr<Toolbar> myToolbarBlock = std::dynamic_pointer_cast<Toolbar>(*it);
         if (myToolbarBlock)
-        {
-            for (std::vector<BlockToolbar::Slot>::iterator it_slot = myToolbarBlock.get()->toolbar.Slots.begin(); it_slot != myToolbarBlock.get()->toolbar.Slots.end(); ++it_slot)
-            {
-                for (std::vector<std::pair<std::shared_ptr<uint64_t>, std::shared_ptr<uint64_t>>>::iterator it_id = entityid_vec.begin(); it_id != entityid_vec.end(); ++it_id)
-                {
-                    if (it_slot->BlockEntityId.get() == it_id->first.get())
-                        it_slot->BlockEntityId = it_id->second;
-                }
-            }
-        }
+            for (std::vector<BlockToolbar::Slot>::iterator it_slot = myToolbarBlock->toolbar.Slots.begin(); it_slot != myToolbarBlock->toolbar.Slots.end(); ++it_slot)
+                it_slot->BlockEntityId.reset(entityIdPair[it_slot->BlockEntityId.get()]);   // update pointer in slot using old pointer (old entity id) that is still sitting there after copying by using it as a key in map to get new pointer address (new entity id)
     }
+
     return cloned;
 }
 
@@ -138,4 +131,33 @@ void CubeGrid::AttachCubegrid(CubeGrid& cubegrid, int x, int y, int z)
     {
 
     }*/
+}
+
+void CubeGrid::DebugPrint(unsigned indent)
+{
+    std::cout<<PrintIndent(indent)<<"BlocksVector<ICubeBlock> blocks:"<<std::endl;
+    for (std::size_t i = 0; i < blocks.size(); i++)
+    {
+        std::cout<<PrintIndent(indent+1)<<"blocks["<<i<<"]:"<<std::endl;
+        ITerminalBlock* myTerminalBlock = dynamic_cast<ITerminalBlock*>(blocks[i].get());
+        if (myTerminalBlock)
+        {
+            std::cout<<PrintIndent(indent+2)<<"ObjectBuilder(): "<<myTerminalBlock->ObjectBuilder()<<std::endl;
+            std::cout<<PrintIndent(indent+2)<<"entityId ptr address: "<<myTerminalBlock->entityId.get()<<std::endl;
+            std::cout<<PrintIndent(indent+2)<<"CustomName: "<<myTerminalBlock->CustomName()<<std::endl;
+            TimerBlock* myTimerBlock = dynamic_cast<TimerBlock*>(myTerminalBlock);
+            if (myTimerBlock)
+            {
+                std::cout<<PrintIndent(indent+2)<<"Toolbar: "<<std::endl;
+                myTimerBlock->toolbar.DebugPrint(indent+3);
+            }
+        }
+    }
+}
+
+inline std::string CubeGrid::PrintIndent(unsigned indent)
+{
+    std::string tabs;
+    for (unsigned i = 0; i < indent; i++, tabs+="\t");
+    return tabs;
 }

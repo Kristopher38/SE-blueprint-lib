@@ -85,3 +85,22 @@ uint8_t BlockToolbar::FirstEmptySlot()
         return max_index+1;
     } else return 0;
 }
+
+inline std::string BlockToolbar::PrintIndent(unsigned indent)
+{
+    std::string tabs;
+    for (unsigned i = 0; i < indent; i++, tabs+="\t");
+    return tabs;
+}
+
+void BlockToolbar::DebugPrint(unsigned indent)
+{
+    std::cout<<PrintIndent(indent)<<"std::vector<Slot> Slots"<<std::endl;
+    for (std::size_t i = 0; i < Slots.size(); i++)
+    {
+        std::cout<<PrintIndent(indent+1)<<"Slots["<<i<<"]:"<<std::endl;
+        std::cout<<PrintIndent(indent+2)<<"Index: "<<static_cast<int>(Slots[i].Index)<<std::endl;
+        std::cout<<PrintIndent(indent+2)<<"Action: "<<Slots[i].Action<<std::endl;
+        std::cout<<PrintIndent(indent+2)<<"EntityId ptr address: "<<Slots[i].BlockEntityId.get()<<std::endl;
+    }
+}
