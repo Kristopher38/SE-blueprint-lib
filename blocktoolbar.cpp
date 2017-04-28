@@ -2,6 +2,8 @@
 
 using namespace rapidxml;
 
+const uint8_t BlockToolbar::MaxSlots = 90;
+
 BlockToolbar::BlockToolbar()
 {
     this->ToolbarType = TOOLBAR_CHARACTER;
@@ -41,35 +43,38 @@ void BlockToolbar::AppendAttributes(rapidxml::xml_node<>* block)
     }
 }
 
-void BlockToolbar::AddEntry(uint8_t index, std::string action, EntityId blockEntityId)
+void BlockToolbar::AddEntry(std::string action, EntityId blockEntityId, int8_t index)
 {
     Slot item;
-    item.Index = index;
+
+    if (index > -1)   // range check
+    {
+        if (index < MaxSlots)
+            item.Index = index;
+        else
+            std::out_of_range("Toolbar index out of range");
+    }
+    else
+        item.Index = this->FirstEmptySlot();
+
     item.Action = action;
     item.BlockEntityId = blockEntityId;
     Slots.push_back(item);
 }
 
-void BlockToolbar::AddEntry(uint8_t index, std::string action, ITerminalBlock* cubeblock)
+void BlockToolbar::AddEntry(std::string action, ITerminalBlock* cubeblock, int8_t index)
 {
-    this->AddEntry(index, action, cubeblock->entityId);
+    this->AddEntry(action, cubeblock->entityId, index);
 }
 
-void BlockToolbar::AddEntry(uint8_t index, std::string action, ITerminalBlock& cubeblock)
+void BlockToolbar::AddEntry(std::string action, ITerminalBlock& cubeblock, int8_t index)
 {
-    this->AddEntry(index, action, cubeblock.entityId);
+    this->AddEntry(action, cubeblock.entityId, index);
 }
 
-void BlockToolbar::RemoveEntry(uint8_t index)
+void BlockToolbar::RemoveEntry(int8_t index)
 {
-    for (uint8_t i = 0; i < Slots.size(); ++i)
-    {
-        if (Slots[i].Index == index)
-        {
-            Slots.erase(Slots.begin()+i);
-            break;
-        }
-    }
+    Slots.erase(Slots.begin()+index);
 }
 
 uint8_t BlockToolbar::FirstEmptySlot()
@@ -77,13 +82,16 @@ uint8_t BlockToolbar::FirstEmptySlot()
     if (Slots.size())
     {
         uint8_t max_index = Slots[0].Index;
-        for (std::vector<Slot>::iterator it = Slots.begin(); it != Slots.end(); ++it)
+        for (std::vector<Slot>::iterator it = Slots.begin()+1; it != Slots.end(); ++it)
         {
             if (it->Index > max_index)
                 max_index = it->Index;
         }
-        return max_index+1;
-    } else return 0;
+        if (max_index+1 < MaxSlots)     // range check
+            return max_index+1;
+        else std::out_of_range("No empty slots in toolbar");
+    }
+    return 0;
 }
 
 inline std::string BlockToolbar::PrintIndent(unsigned indent)

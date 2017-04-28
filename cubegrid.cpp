@@ -64,6 +64,7 @@ BlocksVector<ICubeBlock> CubeGrid::CloneBlocks(const BlocksVector<ICubeBlock>& t
     BlocksVector<ICubeBlock> cloned;
     std::map<uint64_t*, uint64_t*> entityIdPair;
 
+    cloned.reserve(to_clone.size());
     for (BlocksVector<ICubeBlock>::const_iterator it = to_clone.cbegin(); it != to_clone.cend(); ++it)
     {
         Blockptr<ICubeBlock> cloned_block = it->get()->clone();

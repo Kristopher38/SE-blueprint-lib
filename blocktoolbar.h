@@ -21,6 +21,7 @@ class BlockToolbar
             EntityId BlockEntityId;
         };
         enum TOOLBAR_TYPE {TOOLBAR_CHARACTER};
+        static const uint8_t MaxSlots;
 
         TOOLBAR_TYPE ToolbarType;
         //SelectedSlot???
@@ -32,10 +33,10 @@ class BlockToolbar
 
         void AppendAttributes(rapidxml::xml_node<>* block);
 
-        void AddEntry(uint8_t index, std::string action, EntityId blockEntityId);
-        void AddEntry(uint8_t index, std::string action, ITerminalBlock* cubeblock);
-        void AddEntry(uint8_t index, std::string action, ITerminalBlock& cubeblock);
-        void RemoveEntry(uint8_t index);
+        void AddEntry(std::string action, EntityId blockEntityId, int8_t index = -1);
+        void AddEntry(std::string action, ITerminalBlock* cubeblock, int8_t index = -1);
+        void AddEntry(std::string action, ITerminalBlock& cubeblock, int8_t index = -1);
+        void RemoveEntry(int8_t index);
         uint8_t FirstEmptySlot();
         void DebugPrint(unsigned indent);
         std::string PrintIndent(unsigned indent);
