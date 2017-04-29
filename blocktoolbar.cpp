@@ -52,7 +52,7 @@ void BlockToolbar::AddEntry(std::string action, EntityId blockEntityId, int8_t i
         if (index < MaxSlots)
             item.Index = index;
         else
-            std::out_of_range("Toolbar index out of range");
+            throw std::out_of_range("Toolbar index out of range");
     }
     else
         item.Index = this->FirstEmptySlot();
@@ -89,7 +89,7 @@ uint8_t BlockToolbar::FirstEmptySlot()
         }
         if (max_index+1 < MaxSlots)     // range check
             return max_index+1;
-        else std::out_of_range("No empty slots in toolbar");
+        else throw std::out_of_range("No empty slots in toolbar");
     }
     return 0;
 }

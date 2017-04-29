@@ -83,7 +83,11 @@ BlocksVector<ICubeBlock> CubeGrid::CloneBlocks(const BlocksVector<ICubeBlock>& t
         std::shared_ptr<Toolbar> myToolbarBlock = std::dynamic_pointer_cast<Toolbar>(*it);
         if (myToolbarBlock)
             for (std::vector<BlockToolbar::Slot>::iterator it_slot = myToolbarBlock->toolbar.Slots.begin(); it_slot != myToolbarBlock->toolbar.Slots.end(); ++it_slot)
-                it_slot->BlockEntityId.reset(entityIdPair[it_slot->BlockEntityId.get()]);   // update pointer in slot using old pointer (old entity id) that is still sitting there after copying by using it as a key in map to get new pointer address (new entity id)
+            {
+                uint64_t* new_entityid = entityIdPair[it_slot->BlockEntityId.get()];
+                if (new_entityid)
+                    it_slot->BlockEntityId.reset(new_entityid);   // update pointer in slot using old pointer (old entity id) that is still sitting there after copying by using it as a key in map to get new pointer address (new entity id)
+            }
     }
 
     return cloned;
