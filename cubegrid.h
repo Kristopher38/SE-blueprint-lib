@@ -39,6 +39,7 @@ class CubeGrid
         ~CubeGrid() {}
 
         CubeGrid(const CubeGrid& cubegrid) : entityId(std::make_shared<uint64_t>(0)), Parameters(cubegrid.Parameters), blocks(CloneBlocks(cubegrid.blocks)) {}
+        CubeGrid(CubeGrid&& cubegrid) noexcept : entityId(std::move(cubegrid.entityId)), Parameters(cubegrid.Parameters), blocks(std::move(cubegrid.blocks)) {}
 
         static void TranslateCoords(BlocksVector<ICubeBlock>* to_translate, int x, int y, int z);
         void TranslateCoords(int x, int y, int z);
