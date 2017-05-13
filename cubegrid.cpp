@@ -52,6 +52,16 @@ void CubeGrid::AppendXml(rapidxml::xml_node<>* cubegrids_node)
         cubeblocks_node->append_attribute(doc->allocate_attribute("xsi:type", doc->allocate_string(blocks[i]->ObjectBuilder().insert(0, "MyObjectBuilder_").c_str())));
         blocks[i]->AppendAttributes(cubeblocks_node);
     }
+
+    cubegrid->append_node(doc->allocate_node(node_element, "BlockGroups"));
+    for (std::size_t i = 0; i < groups.size(); ++i)
+    {
+        rapidxml::xml_node<>* blockgroups_node = cubegrid->last_node();
+        blockgroups_node->append_node(doc->allocate_node(node_element, "MyObjectBuilder_BlockGroup"));
+        blockgroups_node = blockgroups_node->last_node();
+        groups[i].AppendXml(blockgroups_node);
+    }
+
     cubegrid->append_node(doc->allocate_node(node_element, "IsStatic", Parameters.IsStatic ? "true" : "false"));
     cubegrid->append_node(doc->allocate_node(node_element, "DisplayName", doc->allocate_string(Parameters.DisplayName.c_str())));
     cubegrid->append_node(doc->allocate_node(node_element, "DestructibleBlocks", Parameters.DestructibleBlocks ? "true" : "false"));
@@ -82,11 +92,11 @@ BlocksVector<ICubeBlock> CubeGrid::CloneBlocks(const BlocksVector<ICubeBlock>& t
     {
         std::shared_ptr<Toolbar> myToolbarBlock = std::dynamic_pointer_cast<Toolbar>(*it);
         if (myToolbarBlock)
-            for (std::vector<BlockToolbar::Slot>::iterator it_slot = myToolbarBlock->toolbar.Slots.begin(); it_slot != myToolbarBlock->toolbar.Slots.end(); ++it_slot)
+            for (std::vector<std::shared_ptr<Slot>>::iterator it_slot = myToolbarBlock->toolbar.Slots.begin(); it_slot != myToolbarBlock->toolbar.Slots.end(); ++it_slot)
             {
-                uint64_t* new_entityid = entityIdPair[it_slot->BlockEntityId.get()];
+                uint64_t* new_entityid = entityIdPair[it_slot->get()->BlockEntityId.get()];
                 if (new_entityid)
-                    it_slot->BlockEntityId.reset(new_entityid);   // update pointer in slot using old pointer (old entity id) that is still sitting there after copying by using it as a key in map to get new pointer address (new entity id)
+                    it_slot->get()->BlockEntityId.reset(new_entityid);   // update pointer in slot using old pointer (old entity id) that is still sitting there after copying by using it as a key in map to get new pointer address (new entity id)
             }
     }
 

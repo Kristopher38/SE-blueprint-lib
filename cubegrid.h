@@ -17,6 +17,7 @@
 #include "blocksvector.h"
 #include "blocktoolbar.h"
 #include "blocks.h"
+#include "blockgroup.h"
 
 using namespace rapidxml;
 
@@ -30,6 +31,7 @@ class CubeGrid
     public:
         CubeGridParams Parameters;
         BlocksVector<ICubeBlock> blocks;
+        std::vector<BlockGroup> groups;
 
     private:
         CubeGrid(CubeGridParams parameters, BlocksVector<ICubeBlock> cubeblocks) : Parameters(parameters), blocks(cubeblocks) {}
@@ -39,8 +41,8 @@ class CubeGrid
         CubeGrid(CubeGridParams parameters = CubeGridParams()) : entityId(std::make_shared<uint64_t>(0)), Parameters(parameters) {}
         ~CubeGrid() {}
 
-        CubeGrid(const CubeGrid& cubegrid) : entityId(std::make_shared<uint64_t>(0)), Parameters(cubegrid.Parameters), blocks(CloneBlocks(cubegrid.blocks)) {}
-        CubeGrid(CubeGrid&& cubegrid) noexcept : entityId(std::move(cubegrid.entityId)), Parameters(cubegrid.Parameters), blocks(std::move(cubegrid.blocks)) {}
+        CubeGrid(const CubeGrid& cubegrid) : entityId(std::make_shared<uint64_t>(0)), Parameters(cubegrid.Parameters), blocks(CloneBlocks(cubegrid.blocks)), groups(cubegrid.groups) {}
+        CubeGrid(CubeGrid&& cubegrid) noexcept : entityId(std::move(cubegrid.entityId)), Parameters(cubegrid.Parameters), blocks(std::move(cubegrid.blocks)), groups(std::move(cubegrid.groups)) {}
         inline CubeGrid& operator=(const CubeGrid& rval) = default;
 
         static void TranslateCoords(BlocksVector<ICubeBlock>* to_translate, int x, int y, int z);
