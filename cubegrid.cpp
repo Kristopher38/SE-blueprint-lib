@@ -120,11 +120,10 @@ void CubeGrid::TranslateCoords(int x, int y, int z)
     }
 };*/
 
-void CubeGrid::AttachCubegrid(CubeGrid& cubegrid, int x, int y, int z)
+void CubeGrid::AttachCubegrid(CubeGrid cubegrid, int x, int y, int z)
 {
-    BlocksVector<ICubeBlock> to_attach = cubegrid.CloneBlocks(cubegrid.blocks);
-    CubeGrid::TranslateCoords(&to_attach, x, y, z);
-    blocks.insert(blocks.end(), to_attach.begin(), to_attach.end());
+    CubeGrid::TranslateCoords(&cubegrid.blocks, x, y, z);
+    this->blocks.insert(this->blocks.end(), std::make_move_iterator(cubegrid.blocks.begin()), std::make_move_iterator(cubegrid.blocks.end()));
 
     /*std::set<Coordinates> cubeCoords;
     for (BlocksVector<ICubeBlock>::iterator it = blocks.begin(); it != blocks.end(); ++it)

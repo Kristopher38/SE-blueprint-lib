@@ -10,6 +10,7 @@
 #include <set>
 #include <rapidxml/rapidxml.hpp>
 #include <map>
+#include <iterator>
 #include "cubeblock.h"
 #include "terminalblock.h"
 #include "typedefs.h"
@@ -40,10 +41,11 @@ class CubeGrid
 
         CubeGrid(const CubeGrid& cubegrid) : entityId(std::make_shared<uint64_t>(0)), Parameters(cubegrid.Parameters), blocks(CloneBlocks(cubegrid.blocks)) {}
         CubeGrid(CubeGrid&& cubegrid) noexcept : entityId(std::move(cubegrid.entityId)), Parameters(cubegrid.Parameters), blocks(std::move(cubegrid.blocks)) {}
+        inline CubeGrid& operator=(const CubeGrid& rval) = default;
 
         static void TranslateCoords(BlocksVector<ICubeBlock>* to_translate, int x, int y, int z);
         void TranslateCoords(int x, int y, int z);
-        void AttachCubegrid(CubeGrid& cubegrid, int x = 0, int y = 0, int z = 0);
+        void AttachCubegrid(CubeGrid cubegrid, int x = 0, int y = 0, int z = 0);
 
         void DebugPrint(unsigned indent);
         std::string PrintIndent(unsigned indent);

@@ -32,6 +32,7 @@ class Blueprint
         void AssignEntityIds();
         void BuildXml();
         void Print(std::ostream& out, bool no_indenting);
+        void MergeCubegrids();
 };
 
 #endif // H_BLUEPRINT

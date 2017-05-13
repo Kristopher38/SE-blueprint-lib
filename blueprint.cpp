@@ -69,3 +69,12 @@ void Blueprint::Print(std::ostream& out, bool no_indenting)
         BuildXml();
     rapidxml::print(out, *doc, no_indenting ? print_no_indenting : 0);
 }
+
+void Blueprint::MergeCubegrids()
+{
+    for (std::vector<CubeGrid>::iterator it = Cubegrids.begin()+1; it != Cubegrids.end(); ++it)
+    {
+        Cubegrids.begin()->AttachCubegrid(*it);
+    }
+    Cubegrids.erase(Cubegrids.begin()+1, Cubegrids.end());
+}

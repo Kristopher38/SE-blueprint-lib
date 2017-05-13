@@ -67,7 +67,7 @@ void BlockToolbar::AddEntry(std::string action, ITerminalBlock* cubeblock, int8_
     this->AddEntry(action, cubeblock->entityId, index);
 }
 
-void BlockToolbar::AddEntry(std::string action, ITerminalBlock& cubeblock, int8_t index)
+void BlockToolbar::AddEntry(std::string action, const ITerminalBlock& cubeblock, int8_t index)
 {
     this->AddEntry(action, cubeblock.entityId, index);
 }

@@ -51,6 +51,10 @@ class ITerminalBlock : public ICubeBlock // shows in terminal
         {
             return !(*this==rhs);
         }
+        inline const EntityId& GetEntityId()
+        {
+            return this->entityId;
+        }
 };
 
 #endif // H_TERMINALBLOCK
